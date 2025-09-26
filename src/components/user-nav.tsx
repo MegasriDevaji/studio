@@ -10,16 +10,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LogOut, Settings, User } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
 
 export function UserNav() {
-  const userAvatar = PlaceHolderImages.find(p => p.id === 'user-avatar');
   return (
     <div className="flex items-center gap-3">
        <Avatar className="hidden h-9 w-9 group-data-[state=expanded]:sm:block">
-        {userAvatar && <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} data-ai-hint={userAvatar.imageHint} />}
-        <AvatarFallback>U</AvatarFallback>
+        <AvatarFallback>D</AvatarFallback>
       </Avatar>
       <div className="hidden flex-1 flex-col overflow-hidden group-data-[state=expanded]:sm:flex">
         <p className="truncate text-sm font-medium">Demo User</p>
@@ -31,8 +28,7 @@ export function UserNav() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-10 w-10 rounded-full">
             <Avatar className="h-9 w-9">
-              {userAvatar && <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} data-ai-hint={userAvatar.imageHint} />}
-              <AvatarFallback>U</AvatarFallback>
+              <AvatarFallback>D</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>

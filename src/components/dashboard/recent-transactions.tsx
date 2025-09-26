@@ -41,7 +41,7 @@ export function RecentTransactions({ transactions }: { transactions: Transaction
                     )}
                   </TableCell>
                   <TableCell className="text-right">
-                    -${transaction.amount.toFixed(2)}
+                    -₹{transaction.amount.toFixed(2)}
                   </TableCell>
                 </TableRow>
               );

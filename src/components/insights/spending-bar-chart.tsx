@@ -67,7 +67,7 @@ export function SpendingBarChart() {
               tickFormatter={(value) => value}
             />
             <YAxis
-              tickFormatter={(value) => `$${value}`}
+              tickFormatter={(value) => `₹${value}`}
               tickLine={false}
               axisLine={false}
               tickMargin={10}

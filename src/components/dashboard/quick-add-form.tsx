@@ -60,7 +60,7 @@ export function QuickAddForm({ onAddTransaction }: QuickAddFormProps) {
     
     toast({
       title: "Expense Added",
-      description: `Successfully logged a new expense of $${amount}.`,
+      description: `Successfully logged a new expense of ₹${amount}.`,
     });
 
     // Reset form and close dialog
@@ -94,7 +94,7 @@ export function QuickAddForm({ onAddTransaction }: QuickAddFormProps) {
               <Input
                 id="amount"
                 type="number"
-                placeholder="$0.00"
+                placeholder="₹0.00"
                 className="col-span-3"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}

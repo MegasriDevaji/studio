@@ -33,11 +33,11 @@ export default function DashboardLayout({
             </SidebarFooter>
           </div>
         </Sidebar>
-        <SidebarInset>
+        <SidebarInset className="flex flex-1 flex-col overflow-y-auto">
           <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center justify-between border-b bg-background/80 p-4 backdrop-blur-sm sm:justify-end">
             <SidebarTrigger className="sm:hidden" />
           </header>
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <main className="flex-1 p-4 sm:p-6 lg:p-8">
             {children}
           </main>
         </SidebarInset>

@@ -5,7 +5,7 @@ const firebaseConfig = {
   "appId": "1:801376609533:web:4795ee8eb546136e6dca94",
   "apiKey": "AIzaSyBptm4wxT5ErzrLP5yx4sJlGALPk2zOrD8",
   "authDomain": "studio-5917156264-ac4cb.firebaseapp.com",
-  "measurementId": "",
+  "measurementId": "G-ENT2W221Y9",
   "messagingSenderId": "801376609533"
 };
 

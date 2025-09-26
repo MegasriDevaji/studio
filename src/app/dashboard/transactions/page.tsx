@@ -1,7 +1,10 @@
+'use client';
+
 import { TransactionsTable } from "@/components/transactions/transactions-table";
-import { transactions } from "@/lib/data";
+import { useTransactions } from "@/hooks/use-transactions";
 
 export default function TransactionsPage() {
+  const { transactions } = useTransactions();
   return (
     <div className="space-y-8">
       <div>

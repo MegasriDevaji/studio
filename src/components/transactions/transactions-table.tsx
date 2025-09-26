@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -11,8 +11,8 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { format } from "date-fns"
+} from '@tanstack/react-table';
+import { format } from 'date-fns';
 
 import {
   Table,
@@ -21,79 +21,105 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import type { Transaction } from "@/lib/types"
-import { categories } from "@/lib/data"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MoreHorizontal } from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { cn } from "@/lib/utils"
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import type { Transaction } from '@/lib/types';
+import { categories } from '@/lib/data';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { MoreHorizontal } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+import { useSearchParams } from 'next/navigation';
 
 export const columns: ColumnDef<Transaction>[] = [
   {
-    accessorKey: "date",
-    header: "Date",
-    cell: ({ row }) => format(row.getValue("date"), "MMM d, yyyy"),
+    accessorKey: 'date',
+    header: 'Date',
+    cell: ({ row }) => format(row.getValue('date'), 'MMM d, yyyy'),
   },
   {
-    accessorKey: "description",
-    header: "Description",
+    accessorKey: 'description',
+    header: 'Description',
   },
   {
-    accessorKey: "category",
-    header: "Category",
+    accessorKey: 'category',
+    header: 'Category',
     cell: ({ row }) => {
-      const categoryValue = row.getValue("category") as string;
-      const category = categories.find(c => c.value === categoryValue);
+      const categoryValue = row.getValue('category') as string;
+      const category = categories.find((c) => c.value === categoryValue);
       if (!category) return null;
       return (
         <Badge variant="outline" className="border-0 font-medium">
-          <category.icon className="mr-2 h-4 w-4" style={{ color: category.color }} />
+          <category.icon
+            className="mr-2 h-4 w-4"
+            style={{ color: category.color }}
+          />
           {category.label}
         </Badge>
-      )
+      );
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
+      return value.includes(row.getValue(id));
     },
   },
   {
-    accessorKey: "type",
-    header: "Type",
+    accessorKey: 'type',
+    header: 'Type',
     cell: ({ row }) => {
-      const type = row.getValue("type") as string;
+      const type = row.getValue('type') as string;
       return (
-        <Badge variant={type === 'income' ? 'default' : 'secondary'} className={cn(type === 'income' && 'bg-green-600')}>
+        <Badge
+          variant={type === 'income' ? 'default' : 'secondary'}
+          className={cn(type === 'income' && 'bg-green-600')}
+        >
           {type.charAt(0).toUpperCase() + type.slice(1)}
         </Badge>
       );
     },
-     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
     },
   },
   {
-    accessorKey: "amount",
+    accessorKey: 'amount',
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-      const formatted = new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-      }).format(amount)
+      const amount = parseFloat(row.getValue('amount'));
+      const formatted = new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+      }).format(amount);
       const type = row.original.type;
- 
-      return <div className={cn(
-        "text-right font-medium",
-        type === "income" ? "text-green-500" : "text-red-500"
-      )}>{type === 'income' ? '+' : '-'}{formatted}</div>
+
+      return (
+        <div
+          className={cn(
+            'text-right font-medium',
+            type === 'income' ? 'text-green-500' : 'text-red-500'
+          )}
+        >
+          {type === 'income' ? '+' : '-'}
+          {formatted}
+        </div>
+      );
     },
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: () => {
       return (
         <DropdownMenu>
@@ -110,16 +136,21 @@ export const columns: ColumnDef<Transaction>[] = [
             <DropdownMenuItem className="text-red-500">Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
 export function TransactionsTable({ data }: { data: Transaction[] }) {
+  const searchParams = useSearchParams();
+  const typeFilter = searchParams.get('type');
+
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: 'date', desc: true },
-  ])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  ]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    typeFilter ? [{ id: 'type', value: typeFilter }] : []
+  );
 
   const table = useReactTable({
     data,
@@ -134,22 +165,28 @@ export function TransactionsTable({ data }: { data: Transaction[] }) {
       sorting,
       columnFilters,
     },
-  })
+  });
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
         <Input
           placeholder="Filter by description..."
-          value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn('description')?.getFilterValue() as string) ?? ''
+          }
           onChange={(event) =>
-            table.getColumn("description")?.setFilterValue(event.target.value)
+            table.getColumn('description')?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
         <div className="flex gap-4">
           <Select
-            onValueChange={(value) => table.getColumn("category")?.setFilterValue(value === "all" ? undefined : value)}
+            onValueChange={(value) =>
+              table
+                .getColumn('category')
+                ?.setFilterValue(value === 'all' ? undefined : value)
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter by category" />
@@ -157,12 +194,21 @@ export function TransactionsTable({ data }: { data: Transaction[] }) {
             <SelectContent>
               <SelectItem value="all">All Categories</SelectItem>
               {categories.map((category) => (
-                <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+                <SelectItem key={category.value} value={category.value}>
+                  {category.label}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
-           <Select
-            onValueChange={(value) => table.getColumn("type")?.setFilterValue(value === "all" ? undefined : value)}
+          <Select
+            value={
+              (table.getColumn('type')?.getFilterValue() as string) ?? 'all'
+            }
+            onValueChange={(value) =>
+              table
+                .getColumn('type')
+                ?.setFilterValue(value === 'all' ? undefined : value)
+            }
           >
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Filter by type" />
@@ -190,7 +236,7 @@ export function TransactionsTable({ data }: { data: Transaction[] }) {
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -200,18 +246,24 @@ export function TransactionsTable({ data }: { data: Transaction[] }) {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -238,5 +290,5 @@ export function TransactionsTable({ data }: { data: Transaction[] }) {
         </Button>
       </div>
     </div>
-  )
+  );
 }

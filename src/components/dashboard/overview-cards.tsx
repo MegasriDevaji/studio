@@ -38,7 +38,7 @@ export function OverviewCards({ transactions }: OverviewCardsProps) {
       },
       { totalBalance: 0, monthlyIncome: 0, monthlySpending: 0 }
     );
-  }, [transactions, thisMonthStart]);
+  }, [transactions]);
 
   return (
     <div className="grid gap-4 md:grid-cols-3">

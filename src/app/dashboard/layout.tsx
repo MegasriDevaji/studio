@@ -19,7 +19,7 @@ export default function DashboardLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="h-screen w-full overflow-hidden bg-background text-foreground">
+      <div className="flex h-screen w-full bg-background text-foreground">
         <Sidebar>
           <div className="flex h-full flex-col">
             <SidebarHeader>
@@ -33,14 +33,14 @@ export default function DashboardLayout({
             </SidebarFooter>
           </div>
         </Sidebar>
-        <SidebarInset className="flex flex-1 flex-col overflow-y-auto">
+        <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center justify-between border-b bg-background/80 p-4 backdrop-blur-sm sm:justify-end">
             <SidebarTrigger className="sm:hidden" />
           </header>
-          <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
             {children}
           </main>
-        </SidebarInset>
+        </div>
       </div>
     </SidebarProvider>
   );

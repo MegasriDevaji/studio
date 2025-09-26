@@ -13,13 +13,19 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LogOut, Settings, User } from 'lucide-react';
 import Link from 'next/link';
-import { useAuth } from '@/hooks/use-auth';
+import { useRouter } from 'next/navigation';
 
 export function UserNav() {
-  const { user, signOut } = useAuth();
+  const router = useRouter();
 
-  if (!user) {
-    return null;
+  const handleSignOut = () => {
+    router.push('/login');
+  }
+
+  const user = {
+    displayName: "Demo User",
+    email: "demo@example.com",
+    photoURL: ""
   }
 
   const userInitial = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'D';
@@ -66,7 +72,7 @@ export function UserNav() {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={signOut}>
+          <DropdownMenuItem onClick={handleSignOut}>
             <LogOut className="mr-2 h-4 w-4" />
             <span>Log out</span>
           </DropdownMenuItem>

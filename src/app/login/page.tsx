@@ -2,29 +2,22 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Cat } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useState } from "react";
 
 export default function LoginPage() {
-  const { user, signInWithGoogle, loading } = useAuth();
+  const [email, setEmail] = useState("");
   const router = useRouter();
 
-  const handleLogin = async () => {
-    try {
-      await signInWithGoogle();
-    } catch (error) {
-      console.error("Login failed", error);
-      // Optionally show an error message to the user
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
       router.push("/dashboard");
     }
-  }, [user, router]);
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -35,14 +28,25 @@ export default function LoginPage() {
           <CardDescription>Your personal wallet tracker.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col space-y-4">
-            <Button onClick={handleLogin} disabled={loading}>
-              {loading ? "Signing in..." : "Sign in with Google"}
+          <form onSubmit={handleLogin} className="flex flex-col space-y-4">
+             <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter any email to continue"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit">
+              Sign In
             </Button>
             <p className="text-center text-sm text-muted-foreground">
               Sign in to manage your finances.
             </p>
-          </div>
+          </form>
         </CardContent>
       </Card>
     </div>

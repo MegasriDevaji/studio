@@ -11,32 +11,25 @@ import { Landmark, ArrowUp, ArrowDown, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import type { Transaction } from '@/lib/types';
-import { format, startOfMonth } from 'date-fns';
+import { format } from 'date-fns';
 
 type OverviewCardsProps = {
   transactions: Transaction[];
 };
 
 export function OverviewCards({ transactions }: OverviewCardsProps) {
-  const thisMonthStart = startOfMonth(new Date());
-
-  const { totalBalance, monthlyIncome, monthlySpending } = React.useMemo(() => {
+  const { totalBalance, totalIncome, totalSpending } = React.useMemo(() => {
     return transactions.reduce(
       (acc, t) => {
         if (t.type === 'income') {
-          acc.totalBalance += t.amount;
-          if (t.date >= thisMonthStart) {
-            acc.monthlyIncome += t.amount;
-          }
+          acc.totalIncome += t.amount;
         } else {
-          acc.totalBalance -= t.amount;
-          if (t.date >= thisMonthStart) {
-            acc.monthlySpending += t.amount;
-          }
+          acc.totalSpending += t.amount;
         }
+        acc.totalBalance = acc.totalIncome - acc.totalSpending;
         return acc;
       },
-      { totalBalance: 0, monthlyIncome: 0, monthlySpending: 0 }
+      { totalBalance: 0, totalIncome: 0, totalSpending: 0 }
     );
   }, [transactions]);
 
@@ -69,16 +62,16 @@ export function OverviewCards({ transactions }: OverviewCardsProps) {
       <Card className="flex flex-col">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium">This Month's Income</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Income</CardTitle>
             <ArrowUp className="h-4 w-4 text-green-500" />
           </div>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            +₹{monthlyIncome.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            +₹{totalIncome.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
           <p className="text-xs text-muted-foreground">
-            In {format(new Date(), 'MMMM')}
+            Across all transactions
           </p>
         </CardContent>
         <CardFooter className="mt-auto pt-0">
@@ -93,16 +86,16 @@ export function OverviewCards({ transactions }: OverviewCardsProps) {
       <Card className="flex flex-col">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium">This Month's Spending</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Spending</CardTitle>
             <ArrowDown className="h-4 w-4 text-red-500" />
           </div>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            -₹{monthlySpending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            -₹{totalSpending.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
           <p className="text-xs text-muted-foreground">
-            In {format(new Date(), 'MMMM')}
+            Across all transactions
           </p>
         </CardContent>
         <CardFooter className="mt-auto pt-0">

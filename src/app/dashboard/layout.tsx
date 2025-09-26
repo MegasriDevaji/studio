@@ -11,29 +11,12 @@ import { Nav } from '@/components/nav';
 import { Logo } from '@/components/logo';
 import { UserNav } from '@/components/user-nav';
 import { TransactionsProvider } from '@/hooks/use-transactions';
-import { AuthProvider, useAuth } from '@/hooks/use-auth';
-import { redirect } from 'next/navigation';
 
-function DashboardLayoutContent({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <p>Loading...</p>
-      </div>
-    );
-  }
-
-  if (!user) {
-    redirect('/login');
-    return null;
-  }
-
   return (
     <TransactionsProvider>
       <SidebarProvider>
@@ -62,18 +45,5 @@ function DashboardLayoutContent({
         </div>
       </SidebarProvider>
     </TransactionsProvider>
-  )
-}
-
-
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <AuthProvider>
-      <DashboardLayoutContent>{children}</DashboardLayoutContent>
-    </AuthProvider>
   );
 }

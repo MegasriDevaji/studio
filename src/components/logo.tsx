@@ -14,7 +14,7 @@ export function Logo({ className }: { className?: string }) {
           d="M50 20c-16.57 0-30 13.43-30 30s13.43 30 30 30c1.85 0 3.65-.17 5.39-.5A22.5 22.5 0 0150 57.5c-4.14 0-7.5-3.36-7.5-7.5s3.36-7.5 7.5-7.5c1.85 0 3.53.67 4.83 1.77A29.88 29.88 0 0050 20z"
         />
       </svg>
-      <span className="font-headline text-xl font-bold text-primary-foreground hidden group-data-[state=expanded]:sm:inline">Glowy</span>
+      <span className="font-headline text-xl font-bold text-primary-foreground hidden group-data-[state=expanded]:sm:inline">NightPocket</span>
     </Link>
   );
 }

@@ -1,6 +1,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { PiggyBank } from "lucide-react";
 import Link from "next/link";
 
@@ -14,15 +16,19 @@ export default function LoginPage() {
           <CardDescription>Your personal wallet tracker.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col space-y-4">
+          <form className="flex flex-col space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input id="email" type="email" placeholder="your@email.com" defaultValue="demo@example.com" />
+            </div>
             {/* This is a placeholder for a real login form */}
             <p className="text-center text-sm text-muted-foreground">
-              Login functionality is not yet implemented.
+              Login functionality is for demo purposes.
             </p>
             <Button asChild>
               <Link href="/dashboard">Proceed to Dashboard</Link>
             </Button>
-          </div>
+          </form>
         </CardContent>
       </Card>
     </div>

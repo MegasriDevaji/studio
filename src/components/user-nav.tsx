@@ -22,9 +22,9 @@ export function UserNav() {
         <AvatarFallback>U</AvatarFallback>
       </Avatar>
       <div className="hidden flex-1 flex-col overflow-hidden group-data-[state=expanded]:sm:flex">
-        <p className="truncate text-sm font-medium">Young Professional</p>
+        <p className="truncate text-sm font-medium">Demo User</p>
         <p className="truncate text-xs text-muted-foreground">
-          student@example.com
+          demo@example.com
         </p>
       </div>
       <DropdownMenu>
@@ -39,9 +39,9 @@ export function UserNav() {
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">Young Professional</p>
+              <p className="text-sm font-medium leading-none">Demo User</p>
               <p className="text-xs leading-none text-muted-foreground">
-                student@example.com
+                demo@example.com
               </p>
             </div>
           </DropdownMenuLabel>

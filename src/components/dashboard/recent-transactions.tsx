@@ -1,10 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { categories, transactions } from "@/lib/data";
-import { cn } from "@/lib/utils";
+import { categories } from "@/lib/data";
+import type { Transaction } from "@/lib/types";
 
-export function RecentTransactions() {
+export function RecentTransactions({ transactions }: { transactions: Transaction[] }) {
   const recentTransactions = transactions.slice(0, 5);
 
   const getCategory = (value: string) => {

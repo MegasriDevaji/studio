@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -26,8 +25,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { categories } from "@/lib/data";
 import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import type { Transaction } from "@/lib/types";
 
-export function QuickAddForm() {
+type QuickAddFormProps = {
+  onAddTransaction: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
+};
+
+export function QuickAddForm({ onAddTransaction }: QuickAddFormProps) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
@@ -37,7 +41,6 @@ export function QuickAddForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic validation
     if (!amount || !category) {
       toast({
         title: "Missing Fields",
@@ -50,12 +53,10 @@ export function QuickAddForm() {
     const newTransaction = {
       amount: parseFloat(amount),
       category,
-      description,
-      date: new Date(),
-      id: new Date().toISOString(), // Temporary unique ID
+      description: description || 'Quick Add', // Default description if empty
     };
 
-    console.log("New Transaction:", newTransaction);
+    onAddTransaction(newTransaction);
     
     toast({
       title: "Expense Added",
@@ -97,13 +98,14 @@ export function QuickAddForm() {
                 className="col-span-3"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
+                required
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="category" className="text-right">
                 Category
               </Label>
-              <Select onValueChange={setCategory} value={category}>
+              <Select onValueChange={setCategory} value={category} required>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>

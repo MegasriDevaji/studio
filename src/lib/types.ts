@@ -6,6 +6,7 @@ export type Transaction = {
   description: string;
   amount: number;
   category: string;
+  type: 'income' | 'expense';
 };
 
 export type Category = {
@@ -13,4 +14,5 @@ export type Category = {
   label: string;
   icon: LucideIcon;
   color: string;
+  type?: 'income' | 'expense' | 'all';
 };

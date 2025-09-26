@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { categories } from "@/lib/data";
 import type { Transaction } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 export function RecentTransactions({ transactions }: { transactions: Transaction[] }) {
   const recentTransactions = transactions.slice(0, 5);
@@ -15,7 +16,7 @@ export function RecentTransactions({ transactions }: { transactions: Transaction
     <Card>
       <CardHeader>
         <CardTitle className="font-headline">Recent Transactions</CardTitle>
-        <CardDescription>A list of your most recent expenses.</CardDescription>
+        <CardDescription>A list of your most recent income and expenses.</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -40,8 +41,13 @@ export function RecentTransactions({ transactions }: { transactions: Transaction
                       </Badge>
                     )}
                   </TableCell>
-                  <TableCell className="text-right">
-                    -₹{transaction.amount.toFixed(2)}
+                  <TableCell
+                    className={cn(
+                      "text-right",
+                      transaction.type === "income" ? "text-green-500" : "text-red-500"
+                    )}
+                  >
+                    {transaction.type === 'income' ? '+' : '-'}₹{transaction.amount.toFixed(2)}
                   </TableCell>
                 </TableRow>
               );

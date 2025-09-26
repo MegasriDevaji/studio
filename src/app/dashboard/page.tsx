@@ -16,7 +16,7 @@ export default function DashboardPage() {
       id: new Date().toISOString(),
       date: new Date(),
     };
-    setTransactions(prevTransactions => [transactionWithId, ...prevTransactions]);
+    setTransactions(prevTransactions => [transactionWithId, ...prevTransactions].sort((a,b) => b.date.getTime() - a.date.getTime()));
   };
 
   return (
@@ -25,7 +25,7 @@ export default function DashboardPage() {
         <h1 className="font-headline text-3xl font-bold tracking-tight">Welcome Back!</h1>
         <p className="text-muted-foreground">Here's a quick look at your finances.</p>
       </div>
-      <OverviewCards />
+      <OverviewCards transactions={transactions}/>
       <RecentTransactions transactions={transactions} />
       <QuickAddForm onAddTransaction={handleAddTransaction} />
     </div>

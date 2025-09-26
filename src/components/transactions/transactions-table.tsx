@@ -30,6 +30,7 @@ import { categories } from "@/lib/data"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { MoreHorizontal } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { cn } from "@/lib/utils"
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -60,6 +61,21 @@ export const columns: ColumnDef<Transaction>[] = [
     },
   },
   {
+    accessorKey: "type",
+    header: "Type",
+    cell: ({ row }) => {
+      const type = row.getValue("type") as string;
+      return (
+        <Badge variant={type === 'income' ? 'default' : 'secondary'} className={cn(type === 'income' && 'bg-green-600')}>
+          {type.charAt(0).toUpperCase() + type.slice(1)}
+        </Badge>
+      );
+    },
+     filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+  {
     accessorKey: "amount",
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
@@ -68,8 +84,12 @@ export const columns: ColumnDef<Transaction>[] = [
         style: "currency",
         currency: "INR",
       }).format(amount)
+      const type = row.original.type;
  
-      return <div className="text-right font-medium">{formatted}</div>
+      return <div className={cn(
+        "text-right font-medium",
+        type === "income" ? "text-green-500" : "text-red-500"
+      )}>{type === 'income' ? '+' : '-'}{formatted}</div>
     },
   },
   {
@@ -96,7 +116,9 @@ export const columns: ColumnDef<Transaction>[] = [
 ]
 
 export function TransactionsTable({ data }: { data: Transaction[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: 'date', desc: true },
+  ])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
 
   const table = useReactTable({
@@ -116,7 +138,7 @@ export function TransactionsTable({ data }: { data: Transaction[] }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4">
         <Input
           placeholder="Filter by description..."
           value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
@@ -125,19 +147,33 @@ export function TransactionsTable({ data }: { data: Transaction[] }) {
           }
           className="max-w-sm"
         />
-        <Select
-          onValueChange={(value) => table.getColumn("category")?.setFilterValue(value === "all" ? undefined : value)}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {categories.map((category) => (
-              <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex gap-4">
+          <Select
+            onValueChange={(value) => table.getColumn("category")?.setFilterValue(value === "all" ? undefined : value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+           <Select
+            onValueChange={(value) => table.getColumn("type")?.setFilterValue(value === "all" ? undefined : value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="income">Income</SelectItem>
+              <SelectItem value="expense">Expense</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

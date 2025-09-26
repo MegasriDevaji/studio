@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,17 +26,23 @@ import { categories } from "@/lib/data";
 import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { Transaction } from "@/lib/types";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 type QuickAddFormProps = {
   onAddTransaction: (transaction: Omit<Transaction, 'id' | 'date'>) => void;
 };
 
 export function QuickAddForm({ onAddTransaction }: QuickAddFormProps) {
+  const [type, setType] = useState<'income' | 'expense'>('expense');
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+
+  const availableCategories = useMemo(() => {
+    return categories.filter(c => c.type === type || c.type === 'all');
+  }, [type]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,20 +59,22 @@ export function QuickAddForm({ onAddTransaction }: QuickAddFormProps) {
     const newTransaction = {
       amount: parseFloat(amount),
       category,
-      description: description || 'Quick Add', // Default description if empty
+      description: description || 'Quick Add',
+      type,
     };
 
     onAddTransaction(newTransaction);
     
     toast({
-      title: "Expense Added",
-      description: `Successfully logged a new expense of ₹${amount}.`,
+      title: `${type === 'income' ? 'Income' : 'Expense'} Added`,
+      description: `Successfully logged a new ${type} of ₹${amount}.`,
     });
 
     // Reset form and close dialog
     setAmount("");
     setCategory("");
     setDescription("");
+    setType('expense');
     setOpen(false);
   };
 
@@ -81,12 +89,30 @@ export function QuickAddForm({ onAddTransaction }: QuickAddFormProps) {
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle className="font-headline">Add a Quick Expense</DialogTitle>
+            <DialogTitle className="font-headline">Add a Quick Transaction</DialogTitle>
             <DialogDescription>
-              Log a new cash expense in seconds. Click save when you're done.
+              Log a new income or expense in seconds. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+               <Label className="text-right">Type</Label>
+               <RadioGroup
+                defaultValue="expense"
+                className="col-span-3 flex gap-4"
+                onValueChange={(value: 'income' | 'expense') => setType(value)}
+                value={type}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="income" id="income" />
+                  <Label htmlFor="income">Income</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="expense" id="expense" />
+                  <Label htmlFor="expense">Expense</Label>
+                </div>
+              </RadioGroup>
+            </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="amount" className="text-right">
                 Amount
@@ -110,7 +136,7 @@ export function QuickAddForm({ onAddTransaction }: QuickAddFormProps) {
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.map((cat) => (
+                  {availableCategories.map((cat) => (
                     <SelectItem key={cat.value} value={cat.value}>
                       <div className="flex items-center gap-2">
                         <cat.icon className="h-4 w-4" style={{ color: cat.color }} />
@@ -127,7 +153,7 @@ export function QuickAddForm({ onAddTransaction }: QuickAddFormProps) {
               </Label>
               <Textarea
                 id="description"
-                placeholder="Optional notes about the expense"
+                placeholder="Optional notes about the transaction"
                 className="col-span-3"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -138,7 +164,7 @@ export function QuickAddForm({ onAddTransaction }: QuickAddFormProps) {
             <DialogClose asChild>
               <Button type="button" variant="ghost">Cancel</Button>
             </DialogClose>
-            <Button type="submit" variant="default">Save Expense</Button>
+            <Button type="submit" variant="default">Save Transaction</Button>
           </DialogFooter>
         </form>
       </DialogContent>

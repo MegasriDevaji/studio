@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PiggyBank } from "lucide-react";
+import { Cat } from "lucide-react";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -11,8 +11,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <PiggyBank className="mx-auto h-12 w-12 text-primary" />
-          <CardTitle className="mt-4 font-headline text-2xl font-bold">Welcome to NightPocket</CardTitle>
+          <Cat className="mx-auto h-12 w-12 text-primary" />
+          <CardTitle className="mt-4 font-headline text-2xl font-bold">Welcome to Cash Cat</CardTitle>
           <CardDescription>Your personal wallet tracker.</CardDescription>
         </CardHeader>
         <CardContent>

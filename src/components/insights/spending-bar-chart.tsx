@@ -14,9 +14,9 @@ import {
   ChartTooltipContent,
   ChartConfig,
 } from "@/components/ui/chart"
-import { transactions } from "@/lib/data"
+import { useTransactions } from "@/hooks/use-transactions"
 import { useMemo } from "react"
-import { format, subDays } from "date-fns"
+import { format, subDays, startOfDay } from "date-fns"
 
 const chartConfig = {
   spending: {
@@ -26,9 +26,11 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function SpendingBarChart() {
+  const { transactions } = useTransactions();
+
   const data = useMemo(() => {
     const weeklyData: { [key: string]: number } = {};
-    const today = new Date();
+    const today = startOfDay(new Date());
     for (let i = 0; i < 7; i++) {
       const day = subDays(today, i);
       const dayKey = format(day, "yyyy-MM-dd");
@@ -36,9 +38,11 @@ export function SpendingBarChart() {
     }
 
     transactions.forEach(t => {
-      const dayKey = format(t.date, "yyyy-MM-dd");
-      if (dayKey in weeklyData) {
-        weeklyData[dayKey] += t.amount;
+      if(t.type === 'expense') {
+        const dayKey = format(t.date, "yyyy-MM-dd");
+        if (dayKey in weeklyData) {
+          weeklyData[dayKey] += t.amount;
+        }
       }
     });
 
@@ -47,7 +51,7 @@ export function SpendingBarChart() {
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .map(d => ({...d, date: format(new Date(d.date), "MMM d")}));
 
-  }, []);
+  }, [transactions]);
 
   return (
     <Card>

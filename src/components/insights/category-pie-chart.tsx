@@ -16,23 +16,32 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-import { categories, transactions } from "@/lib/data"
+import { categories } from "@/lib/data"
+import { useTransactions } from "@/hooks/use-transactions"
 
 const chartConfig = categories.reduce((acc, category) => {
-  acc[category.value] = {
-    label: category.label,
-    color: category.color,
-  };
+  if (category.type === 'expense') {
+    acc[category.value] = {
+      label: category.label,
+      color: category.color,
+    };
+  }
   return acc;
 }, {} as ChartConfig);
 
 export function CategoryPieChart() {
+  const { transactions } = useTransactions();
+  
   const data = React.useMemo(() => {
     const categorySpending: { [key: string]: number } = {};
-    categories.forEach(c => categorySpending[c.value] = 0);
+    categories.forEach(c => {
+      if (c.type === 'expense') {
+        categorySpending[c.value] = 0
+      }
+    });
     
     transactions.forEach(t => {
-      if (t.category in categorySpending) {
+      if (t.type === 'expense' && t.category in categorySpending) {
         categorySpending[t.category] += t.amount;
       }
     });
@@ -42,7 +51,7 @@ export function CategoryPieChart() {
       value,
       fill: `var(--color-${category})`,
     })).filter(item => item.value > 0);
-  }, []);
+  }, [transactions]);
 
   const id = "pie-chart"
 
